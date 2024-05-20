@@ -8,7 +8,7 @@ console.log(process.env.PORT);
 
 // Define a route handler for the root URL
 app.get('/api', (req, res) => {
-  console.log("im calling fucker")
+  console.log("im calling fucke")
   res.send('Hello, World! I am Sril ');
 });
 
