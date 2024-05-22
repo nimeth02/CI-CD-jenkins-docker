@@ -1,0 +1,38 @@
+pipeline {
+    agent any 
+    
+    stages { 
+        stage('SCM Checkout') {
+            steps {
+                retry(3) {
+                    git branch: 'main', url: 'https://github.com/nimeth02/CI-CD-jenkins-docker'
+                }
+            }
+        }
+         stage('Login to Docker Hub') {
+            steps {
+                withCredentials([string(credentialsId: 'docker-password-id', variable: 'docker-password')]) {
+                    script {
+                        bat "docker login -u 20011002nimeth -p %docker-password%"
+                    }
+                }
+            }
+        }
+        stage('Build Docker Image') {
+            steps {  
+                bat "C:\\Windows\\System32\\cmd.exe /c docker build -t 20011002nimeth/node-app-image:%BUILD_NUMBER% ."
+            }
+        }
+       
+        stage('Push Image') {
+            steps {
+                bat 'docker push 20011002nimeth/node-app-image:%BUILD_NUMBER%'
+            }
+        }
+    }
+    post {
+        always {
+            bat 'docker logout'
+        }
+    }
+}
